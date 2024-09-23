@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/infinite-api/static/css/main.ff7a4acd.css",
-    "main.js": "/infinite-api/static/js/main.777c59dd.js",
-    "static/js/453.98dd76c5.chunk.js": "/infinite-api/static/js/453.98dd76c5.chunk.js",
-    "static/media/logo.svg": "/infinite-api/static/media/logo.d6164cc75a2a1a7f6db59d5e8280c11a.svg",
-    "index.html": "/infinite-api/index.html",
-    "main.ff7a4acd.css.map": "/infinite-api/static/css/main.ff7a4acd.css.map",
-    "main.777c59dd.js.map": "/infinite-api/static/js/main.777c59dd.js.map",
-    "453.98dd76c5.chunk.js.map": "/infinite-api/static/js/453.98dd76c5.chunk.js.map"
+    "main.css": "/Infinite-API/static/css/main.ff7a4acd.css",
+    "main.js": "/Infinite-API/static/js/main.5459d3f7.js",
+    "static/js/453.98dd76c5.chunk.js": "/Infinite-API/static/js/453.98dd76c5.chunk.js",
+    "static/media/logo.svg": "/Infinite-API/static/media/logo.d6164cc75a2a1a7f6db59d5e8280c11a.svg",
+    "index.html": "/Infinite-API/index.html",
+    "main.ff7a4acd.css.map": "/Infinite-API/static/css/main.ff7a4acd.css.map",
+    "main.5459d3f7.js.map": "/Infinite-API/static/js/main.5459d3f7.js.map",
+    "453.98dd76c5.chunk.js.map": "/Infinite-API/static/js/453.98dd76c5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ff7a4acd.css",
-    "static/js/main.777c59dd.js"
+    "static/js/main.5459d3f7.js"
   ]
 }
