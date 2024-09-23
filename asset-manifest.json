@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/Debojit-mitra/infinite-api/static/css/main.ff7a4acd.css",
+    "main.js": "/Debojit-mitra/infinite-api/static/js/main.feb5b741.js",
+    "static/js/453.98dd76c5.chunk.js": "/Debojit-mitra/infinite-api/static/js/453.98dd76c5.chunk.js",
+    "static/media/logo.svg": "/Debojit-mitra/infinite-api/static/media/logo.d6164cc75a2a1a7f6db59d5e8280c11a.svg",
+    "index.html": "/Debojit-mitra/infinite-api/index.html",
+    "main.ff7a4acd.css.map": "/Debojit-mitra/infinite-api/static/css/main.ff7a4acd.css.map",
+    "main.feb5b741.js.map": "/Debojit-mitra/infinite-api/static/js/main.feb5b741.js.map",
+    "453.98dd76c5.chunk.js.map": "/Debojit-mitra/infinite-api/static/js/453.98dd76c5.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ff7a4acd.css",
+    "static/js/main.feb5b741.js"
+  ]
+}
