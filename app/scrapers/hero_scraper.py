@@ -37,7 +37,16 @@ class HeroScraper:
                         )
                         hero_data_list.append(hero_data)
 
-            return HeroSearchResponse(heroes=hero_data_list)
+            # Update to return total_results and results to match HeroSearchResponse model
+            return HeroSearchResponse(
+                total_results=len(hero_data_list),
+                results=[HeroSearchResult(
+                    name=hero.name,
+                    hero_id=hero.hero_id,
+                    thumbnail=hero.image_url,
+                    description=''
+                ) for hero in hero_data_list]
+            )
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Error parsing hero data: {str(e)}")
         

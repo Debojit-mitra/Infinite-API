@@ -1,0 +1,404 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap");
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --primary-color: #0066cc;
+  --secondary-color: #f0f0f0;
+  --accent-color: #ff6b6b;
+}
+
+.dark-theme {
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --primary-color: #61dafb;
+  --secondary-color: #282c34;
+  --accent-color: #ff6b6b;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.api-docs {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  background-color: var(--secondary-color);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 90px;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+}
+
+.api-icon {
+  height: 40px; /* Adjust this value to fit your logo size */
+  margin-right: 10px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.content {
+  display: flex;
+  height: calc(100vh - 60px); /* Subtract header height */
+  overflow: hidden;
+}
+
+.api-nav {
+  width: 200px;
+  padding: 20px;
+  background-color: var(--secondary-color);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.api-nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.api-nav li {
+  margin-bottom: 10px;
+}
+
+.api-nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  display: block;
+}
+
+.api-nav li.active a,
+.api-nav a:hover {
+  background-color: var(--primary-color);
+  color: var(--bg-color);
+}
+
+.api-nav a:hover {
+  transform: translateX(5px);
+}
+
+main {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.api-section h2 {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-top: 0;
+  padding-top: 10px; /* Add this line */
+}
+
+.section-container {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-container.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.examples {
+  margin-top: 20px;
+}
+
+.example {
+  background-color: var(--bg-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.example:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.example h5 {
+  background-color: var(--primary-color);
+  color: var(--bg-color);
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 1rem;
+}
+
+.example code {
+  display: block;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: 12px;
+  border-radius: 0 0 4px 4px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+  overflow-x: auto;
+}
+
+.endpoint {
+  background-color: var(--secondary-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.endpoint h3 {
+  margin-top: 0;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+}
+
+.endpoint .method {
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  margin-right: 10px;
+  font-weight: bold;
+  color: var(--bg-color);
+}
+
+.method.get {
+  background-color: #ff6b6b;
+}
+.method.post {
+  background-color: #49cc90;
+}
+.method.put {
+  background-color: #fca130;
+}
+.method.delete {
+  background-color: #f93e3e;
+}
+
+.endpoint .description {
+  margin-bottom: 20px;
+}
+
+.endpoint .params h4,
+.endpoint .examples h4 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.endpoint .params ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.endpoint .params li {
+  margin-bottom: 10px;
+}
+
+.endpoint .param-name {
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.endpoint .param-required {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-left: 5px;
+}
+
+.endpoint .param-description {
+  display: block;
+  margin-top: 5px;
+}
+
+.endpoint pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.hidden {
+  display: none;
+}
+
+.code-container {
+  position: relative;
+}
+
+.copy-button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background-color: var(--primary-color);
+  color: var(--bg-color);
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.copy-button:hover {
+  background-color: var(--accent-color);
+}
+
+.copy-button:active {
+  transform: translateY(0);
+}
+
+.example pre {
+  padding-right: 70px; /* Make space for the copy button */
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  header {
+    height: auto;
+    min-height: 50px; /* Ensure minimum height */
+    flex-wrap: wrap;
+  }
+
+  .api-icon {
+    height: 30px; /* Adjust for smaller screens */
+    margin-right: 10px;
+  }
+
+  .content {
+    flex-direction: column;
+    height: calc(100vh - 60px); /* Use minimum header height */
+  }
+
+  .api-nav {
+    width: 100%;
+    order: -1;
+    padding: 10px;
+  }
+
+  .api-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .api-nav li {
+    margin: 5px;
+  }
+
+  .api-nav a:hover {
+    transform: translateY(-2px);
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  .endpoint h3 {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .endpoint .method {
+    margin-bottom: 10px;
+  }
+
+  .copy-button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.2rem;
+  }
+
+  .api-nav {
+    padding-left: 1px;
+  }
+
+  .endpoint h3 {
+    font-size: 1.1rem;
+  }
+
+  .example code {
+    font-size: 0.9rem;
+  }
+}
