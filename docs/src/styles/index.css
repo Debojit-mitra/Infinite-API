@@ -54,6 +54,16 @@ header {
 .header-content {
   display: flex;
   align-items: center;
+  user-select: none;
+}
+
+.header-content:focus {
+  outline: none;
+}
+
+.header-content:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }
 
 .api-icon {
@@ -214,6 +224,8 @@ main {
   color: var(--text-color);
   display: flex;
   align-items: center;
+  word-break: break-word; /* Allow breaking of long words */
+  overflow-wrap: break-word; /* Fallback for word-break */
 }
 
 .endpoint .method {

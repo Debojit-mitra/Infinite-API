@@ -18,6 +18,8 @@ const ApiDocs = () => {
     return savedTheme ? savedTheme === "dark" : true;
   });
 
+  const mainContentRef = useRef(null);
+
   const sections = [
     { id: "weather", title: "Weather", component: WeatherSection },
     { id: "books", title: "Books", component: BooksSection },
@@ -38,6 +40,12 @@ const ApiDocs = () => {
     document.body.className = isDark ? "dark-theme" : "light-theme";
   }, [isDark]);
 
+  const resetScroll = () => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTop = 0;
+    }
+  };
+
   const handleSetActiveSection = (newSection) => {
     const currentIndex = sections.findIndex(
       (section) => section.id === activeSection
@@ -46,10 +54,7 @@ const ApiDocs = () => {
     setDirection(newIndex > currentIndex ? 1 : -1);
     prevSectionRef.current = activeSection;
     setActiveSection(newSection);
-  };
-
-  const resetToMainPage = () => {
-    handleSetActiveSection(sections[0].id);
+    resetScroll();
   };
 
   const transitions = useTransition(activeSection, {
@@ -62,11 +67,7 @@ const ApiDocs = () => {
   return (
     <div className="api-docs">
       <header>
-        <div
-          className="header-content"
-          onClick={resetToMainPage}
-          style={{ cursor: "pointer" }}
-        >
+        <div className="header-content">
           <img src={apiLogo} alt="API Icon" className="api-icon" />
           <h1>Infinite API Documentation</h1>
         </div>
@@ -78,7 +79,7 @@ const ApiDocs = () => {
           activeSection={activeSection}
           setActiveSection={handleSetActiveSection}
         />
-        <main>
+        <main ref={mainContentRef}>
           <div className="section-container">
             {transitions((style, item) => (
               <animated.div style={style} className="animated-section">

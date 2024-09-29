@@ -16,6 +16,7 @@ Infinite API is a versatile FastAPI-based project that brings together multiple 
 - 📚 **Books API**: Search and download books from Libgen
 - 📱 **Phones API**: Fetch detailed phone specifications from GSMArena
 - 🦸 **Superhero API**: Explore a vast database of superheroes
+- ⛩️ **Anime API**: Explore the vast database of anime
 
 ## 📚 Documentation
 
@@ -40,13 +41,16 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [license.md](LICENSE.md) file for details.
+This project is licensed under the MIT License. See the [LICENSE.md](LICENSE.md) file for details.
 
 ## 🙏 Acknowledgments
 
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/)
-- [httpx](https://www.python-httpx.org/)
+- [WeatherUnderground](https://www.wunderground.com/)
+- [TimeAndDate](https://www.timeanddate.com/)
+- [Libgen](https://libgen.is/)
+- [GSMArena](https://www.gsmarena.com/)
+- [HeroFandom](https://hero.fandom.com/)
+- [MyAnimeList](https://myanimelist.net/)
 
 <div align="center">
 
