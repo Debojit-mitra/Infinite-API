@@ -27,12 +27,60 @@ const WeatherSection = () => (
       ]}
       examples={[
         {
-          title: "Fetch weather data from Wunderground for Kokata, India",
-          code: "GET /weather/wunderground/in/Kolkata",
+          title: "Fetch weather data from Wunderground for Kolkata, India",
+          code: "/weather/wunderground/in/Kolkata",
         },
         {
-          title: "Fetch weather data from TimeandDate for Kokata, India",
-          code: "GET /weather/timeanddate/india/kolkata",
+          title: "Fetch weather data from TimeandDate for Kolkata, India",
+          code: "/weather/timeanddate/india/kolkata",
+        },
+      ]}
+    />
+
+    <Endpoint
+      method="GET"
+      path="/weather/timeanddate/{country}/{location}/14day"
+      description="Fetch 14-day weather forecast from TimeAndDate for a specific location."
+      params={[
+        {
+          name: "country",
+          required: true,
+          description: "The country name (2-50 characters).",
+        },
+        {
+          name: "location",
+          required: true,
+          description: "The location name (2-50 characters).",
+        },
+      ]}
+      examples={[
+        {
+          title: "Fetch 14-day forecast from TimeandDate for Kolkata, India",
+          code: "/weather/timeanddate/india/kolkata/14day",
+        },
+      ]}
+    />
+
+    <Endpoint
+      method="GET"
+      path="/weather/timeanddate/{country}/{location}/24hour"
+      description="Fetch 24-hour weather forecast from TimeAndDate for a specific location."
+      params={[
+        {
+          name: "country",
+          required: true,
+          description: "The country name (2-50 characters).",
+        },
+        {
+          name: "location",
+          required: true,
+          description: "The location name (2-50 characters).",
+        },
+      ]}
+      examples={[
+        {
+          title: "Fetch 24-hour forecast from TimeandDate for Kolkata, India",
+          code: "/weather/timeanddate/india/kolkata/24hour",
         },
       ]}
     />

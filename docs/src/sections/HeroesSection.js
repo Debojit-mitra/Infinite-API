@@ -11,11 +11,10 @@ const HeroesSection = () => (
       params={[
         { name: "query", required: true, description: "The search query." },
       ]}
-      example="GET /hero/search?query=Superman"
       examples={[
         {
           title: "Search heroes in hero-fandom.",
-          code: "GET /hero/search?query=Superman",
+          code: "/hero/search?query=Superman",
         },
       ]}
     />
@@ -30,11 +29,10 @@ const HeroesSection = () => (
           description: "The ID of the hero to fetch details for.",
         },
       ]}
-      example="GET /hero/details?heroid=Superman_(DC)"
       examples={[
         {
           title: "Fetch hereos details from hero-fandom with id.",
-          code: "GET /hero/details?heroid=Superman_(DC)",
+          code: "/hero/details?heroid=Superman_(DC)",
         },
       ]}
     />
@@ -53,7 +51,7 @@ const HeroesSection = () => (
       examples={[
         {
           title: "Fetch hereos from hero-fandom with names starting from A-Z.",
-          code: "GET /hero/heroes?start=A",
+          code: "/hero/heroes?start=A",
         },
       ]}
     />

@@ -6,11 +6,12 @@ import WeatherSection from "../sections/WeatherSection";
 import BooksSection from "../sections/BooksSection";
 import PhonesSection from "../sections/PhonesSection";
 import HeroesSection from "../sections/HeroesSection";
-import apiLogo from "../logo.svg";
+import apiLogo from "../logo192.png";
+import AnimeSection from "../sections/AnimeSection";
 
 const ApiDocs = () => {
-  const [activeSection, setActiveSection] = useState("weather");
-  const prevSectionRef = useRef(activeSection);
+  const [activeSection, setActiveSection] = useState("weather"); //comment below is important
+  const prevSectionRef = useRef(activeSection); // eslint-disable-next-line
   const [direction, setDirection] = useState(0);
   const [isDark, setIsDark] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -22,6 +23,7 @@ const ApiDocs = () => {
     { id: "books", title: "Books", component: BooksSection },
     { id: "phones", title: "Phones", component: PhonesSection },
     { id: "heroes", title: "Heroes", component: HeroesSection },
+    { id: "anime", title: "Anime", component: AnimeSection },
   ];
 
   const toggleTheme = () => {
@@ -46,6 +48,10 @@ const ApiDocs = () => {
     setActiveSection(newSection);
   };
 
+  const resetToMainPage = () => {
+    handleSetActiveSection(sections[0].id);
+  };
+
   const transitions = useTransition(activeSection, {
     from: { opacity: 0, position: "absolute", width: "100%", height: "100%" },
     enter: { opacity: 1 },
@@ -56,7 +62,11 @@ const ApiDocs = () => {
   return (
     <div className="api-docs">
       <header>
-        <div className="header-content">
+        <div
+          className="header-content"
+          onClick={resetToMainPage}
+          style={{ cursor: "pointer" }}
+        >
           <img src={apiLogo} alt="API Icon" className="api-icon" />
           <h1>Infinite API Documentation</h1>
         </div>

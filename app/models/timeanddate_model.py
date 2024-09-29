@@ -45,3 +45,43 @@ class TimeAndDateWeatherData(BaseModel):
 
     class Config:
         extra = 'allow'
+
+# 14 day forecast
+class DailyForecast(BaseModel):
+    date: str
+    day: str
+    temperature_high: int
+    temperature_low: int
+    condition: str
+    condition_icon: str
+    feels_like: int
+    wind_speed: str
+    wind_direction: str
+    humidity: str
+    precipitation_chance: str
+    precipitation_amount: str
+    uv_index: str
+    sunrise: str
+    sunset: str
+
+class FourteenDayForecast(BaseModel):
+    location: str
+    forecast: List[DailyForecast]
+
+# 24 hour forecast
+class HourlyForecast(BaseModel):
+    time: str
+    date: str
+    temperature: int
+    condition: str
+    condition_icon: str
+    feels_like: int
+    wind_speed: str
+    wind_direction: str
+    humidity: str
+    precipitation_chance: str
+    precipitation_amount: str
+
+class TwentyFourHourForecast(BaseModel):
+    location: str
+    forecast: List[HourlyForecast]

@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.middleware import ErrorHandlingMiddleware
-from app.api import weather, books, phones, hero
+from app.api import weather, books, phones, hero, anime
 
 logging.basicConfig(level=settings.LOG_LEVEL)
 logger = logging.getLogger(__name__)
@@ -24,6 +24,7 @@ app.include_router(weather.router, prefix="/weather", tags=["weather"])
 app.include_router(books.router, prefix="/books", tags=["books"])
 app.include_router(phones.router, prefix="/phones", tags=["phones"])
 app.include_router(hero.router, prefix="/hero", tags=["heroes"])
+app.include_router(anime.router, prefix="/anime", tags=["anime"])
 
 @app.get("/")
 def read_root():

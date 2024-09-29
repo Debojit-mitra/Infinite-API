@@ -15,11 +15,10 @@ const BooksSection = () => (
           description: "The name of the book to search for (1-200 characters).",
         },
       ]}
-      example="GET /books/libgen/The%20Great%20Gatsby"
       examples={[
         {
           title: "Fetch multiple books from libgen.",
-          code: "GET /books/libgen/Thermodynamics R K",
+          code: "/books/libgen/Thermodynamics R K",
         },
       ]}
     />
@@ -42,7 +41,7 @@ const BooksSection = () => (
       examples={[
         {
           title: "Download books from libgen.",
-          code: "GET /books/libgen/download/library_lol/1234567890abcdef1234567890abcdef",
+          code: "/books/libgen/download/library_lol/1234567890abcdef1234567890abcdef",
         },
       ]}
     />

@@ -138,6 +138,10 @@ main {
   scroll-behavior: smooth;
 }
 
+.api-section {
+  padding-bottom: 20px;
+}
+
 .api-section h2 {
   color: var(--primary-color);
   border-bottom: 2px solid var(--primary-color);
@@ -332,34 +336,46 @@ main {
 @media (max-width: 768px) {
   header {
     height: auto;
-    min-height: 50px; /* Ensure minimum height */
+    min-height: 50px;
     flex-wrap: wrap;
   }
 
   .api-icon {
-    height: 30px; /* Adjust for smaller screens */
+    height: 30px;
     margin-right: 10px;
   }
 
   .content {
     flex-direction: column;
-    height: calc(100vh - 60px); /* Use minimum header height */
+    height: calc(100vh - 60px);
+  }
+
+  .api-section {
+    padding-bottom: 60px;
   }
 
   .api-nav {
     width: 100%;
     order: -1;
     padding: 10px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent wrapping */
   }
 
   .api-nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: inline-flex; /* Use inline-flex for horizontal layout */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    padding-right: 10px; /* Add extra padding to the right of the ul */
   }
 
   .api-nav li {
-    margin: 5px;
+    margin: 0 5px; /* Adjust horizontal margin */
+    flex-shrink: 0; /* Prevent shrinking */
+  }
+
+  .api-nav a {
+    padding: 8px 12px;
+    display: inline-block; /* Change to inline-block */
   }
 
   .api-nav a:hover {
@@ -391,7 +407,7 @@ main {
   }
 
   .api-nav {
-    padding-left: 1px;
+    padding: 10px 5px; /* Adjust padding for smaller screens */
   }
 
   .endpoint h3 {

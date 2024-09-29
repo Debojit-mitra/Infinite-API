@@ -18,7 +18,7 @@ const PhonesSection = () => (
       examples={[
         {
           title: "Fetch phone details data from GSMArena.",
-          code: "GET /phones/gsmarena/iphone%2012",
+          code: "/phones/gsmarena/iphone%2012",
         },
       ]}
     />
@@ -29,7 +29,7 @@ const PhonesSection = () => (
       examples={[
         {
           title: "Fetch phone details data from GSMArena.",
-          code: "GET GET /phones/gsmarena/top",
+          code: "/phones/gsmarena/top",
         },
       ]}
     />
@@ -47,7 +47,7 @@ const PhonesSection = () => (
       examples={[
         {
           title: "Fetch phone details data from GSMArena.",
-          code: "GET /phones/gsmarena?id=https://www.gsmarena.com/samsung_galaxy_s21-10626.php",
+          code: "/phones/gsmarena?id=https://www.gsmarena.com/samsung_galaxy_s21-10626.php",
         },
       ]}
     />

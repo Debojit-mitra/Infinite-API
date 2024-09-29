@@ -4,23 +4,28 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 from app.models.hero_model import HeroData, HeroSearchResponse, HeroDetail, HeroSearchResult
 from typing import List
-
+import logging
 
 class HeroScraper:
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+
     async def scrape(self, start: str):
+        self.logger.info(f"Scraping heroes starting with '{start}'")
         url = f"https://hero.fandom.com/wiki/Category:Superheroes?from={start}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
 
         if response.status_code != 200:
+            self.logger.error(f"Failed to fetch hero data. Status code: {response.status_code}")
             raise HTTPException(status_code=404, detail="Hero data not found")
 
         soup = BeautifulSoup(response.text, 'html.parser')
-        #print(soup.prettify())
         return self._parse_data(soup)
 
     def _parse_data(self, soup):
         try:
+            self.logger.debug("Parsing hero data from HTML")
             hero_data_list = []
             members_div = soup.find("div", class_="category-page__members")
             if members_div:
@@ -37,7 +42,7 @@ class HeroScraper:
                         )
                         hero_data_list.append(hero_data)
 
-            # Update to return total_results and results to match HeroSearchResponse model
+            self.logger.info(f"Successfully parsed {len(hero_data_list)} hero entries")
             return HeroSearchResponse(
                 total_results=len(hero_data_list),
                 results=[HeroSearchResult(
@@ -48,29 +53,25 @@ class HeroScraper:
                 ) for hero in hero_data_list]
             )
         except Exception as e:
+            self.logger.error(f"Error parsing hero data: {str(e)}", exc_info=True)
             raise HTTPException(status_code=500, detail=f"Error parsing hero data: {str(e)}")
         
     async def scrape_hero_detail(self, hero_id: str):
+        self.logger.info(f"Scraping details for hero with ID: {hero_id}")
         url = f"https://hero.fandom.com/wiki/{hero_id}"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
 
         if response.status_code != 200:
+            self.logger.error(f"Failed to fetch hero details for ID {hero_id}. Status code: {response.status_code}")
             raise HTTPException(status_code=404, detail="Hero details not found")
 
         soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # # Add this line for debugging
-        # print(f"HTML content: {soup.prettify()}")
-        # pretty_html = soup.prettify()
-        # with open('downloaded_page.html', 'w', encoding='utf-8') as file:
-        #  file.write(pretty_html)
-        # print("HTML content has been downloaded and saved to 'downloaded_page.html'")
-        
         return self._parse_hero_detail(soup, hero_id)
 
     def _parse_hero_detail(self, soup, hero_id):
         try:
+            self.logger.debug(f"Parsing hero details for ID: {hero_id}")
             name = soup.find('h1', class_='page-header__title').text.strip()
             
             image_tag = soup.find('figure', class_='pi-item pi-image')
@@ -84,16 +85,13 @@ class HeroScraper:
                     value = item.find('div', class_='pi-data-value')
                     if label and value:
                         key = label.text.strip()
-                        # Replace all tags except <br> with a space and replace <br> with a space
-                        for tag in value.find_all(True):  # True means all tags
+                        for tag in value.find_all(True):
                             if tag.name == 'br':
-                                tag.replace_with(', ')  # Replace <br> with a space
+                                tag.replace_with(', ')
                             else:
-                                tag.unwrap()  # Remove the tag but keep its content
-                        val = value.decode_contents()  # Get the inner HTML as a string
+                                tag.unwrap()
+                        val = value.decode_contents()
                         details[key] = val
-
-
 
             biography = ""
             bio_section = aside.find('div', id='toc')
@@ -131,7 +129,7 @@ class HeroScraper:
             gallery = []
             gallery_div = soup.find('div', class_='wikia-gallery')
             if gallery_div:
-                for item in gallery_div.find_all('div', class_='wikia-gallery-item')[:5]:  # Limit to 5 images
+                for item in gallery_div.find_all('div', class_='wikia-gallery-item')[:5]:
                     img = item.find('img')
                     if img:
                         gallery.append({
@@ -139,6 +137,7 @@ class HeroScraper:
                             'caption': img.get('alt', '')
                         })
 
+            self.logger.info(f"Successfully parsed details for hero: {name}")
             return HeroDetail(
                 hero_id=hero_id,
                 name=name,
@@ -148,21 +147,24 @@ class HeroScraper:
                 gallery=gallery
             )
         except Exception as e:
-            print(f"Error parsing hero detail: {str(e)}")
+            self.logger.error(f"Error parsing hero detail for ID {hero_id}: {str(e)}", exc_info=True)
             raise HTTPException(status_code=500, detail=f"Error parsing hero detail: {str(e)}")
         
     async def search_heroes(self, query: str) -> HeroSearchResponse:
+        self.logger.info(f"Searching heroes with query: '{query}'")
         url = f"https://hero.fandom.com/wiki/Special:Search?query={query}&scope=internal&navigationSearch=true"
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
 
         if response.status_code != 200:
+            self.logger.error(f"Hero search failed for query '{query}'. Status code: {response.status_code}")
             raise HTTPException(status_code=404, detail="Hero search failed")
 
         soup = BeautifulSoup(response.text, 'html.parser')
         return self._parse_search_results(soup)
 
     def _parse_search_results(self, soup: BeautifulSoup) -> HeroSearchResponse:
+        self.logger.debug("Parsing hero search results")
         results = []
         for item in soup.select('.unified-search__result'):
             name = item.select_one('.unified-search__result__title').text.strip()
@@ -179,5 +181,6 @@ class HeroScraper:
             ))
         
         total_results = len(results)
+        self.logger.info(f"Found {total_results} heroes in search results")
         
         return HeroSearchResponse(total_results=total_results, results=results)
