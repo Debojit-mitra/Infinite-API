@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Infinite-API/static/css/main.9d6badae.css",
-    "main.js": "/Infinite-API/static/js/main.aec46663.js",
+    "main.js": "/Infinite-API/static/js/main.e6d5e2f3.js",
     "static/js/453.98dd76c5.chunk.js": "/Infinite-API/static/js/453.98dd76c5.chunk.js",
     "index.html": "/Infinite-API/index.html",
     "main.9d6badae.css.map": "/Infinite-API/static/css/main.9d6badae.css.map",
-    "main.aec46663.js.map": "/Infinite-API/static/js/main.aec46663.js.map",
+    "main.e6d5e2f3.js.map": "/Infinite-API/static/js/main.e6d5e2f3.js.map",
     "453.98dd76c5.chunk.js.map": "/Infinite-API/static/js/453.98dd76c5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.9d6badae.css",
-    "static/js/main.aec46663.js"
+    "static/js/main.e6d5e2f3.js"
   ]
 }
