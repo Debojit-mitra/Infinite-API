@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 
 class MalDataType1(BaseModel):
     rank: str
@@ -65,6 +65,7 @@ class VoiceActor(BaseModel):
 
 class Character(BaseModel):
     name: str
+    url: str
     image_url: str
     role: str
     voice_actors: List[VoiceActor]
@@ -108,3 +109,44 @@ class AnimeDetails(BaseModel):
     characters: List[Character]
     themes: Dict[str, List[Theme]]
     recommendations: List[Recommendation]
+
+# anime character details
+class VoiceActor(BaseModel):
+    name: str
+    language: str
+    url: Optional[str]
+    image_url: Optional[str]
+
+class CharacterDetails(BaseModel):
+    name: str
+    image_url: Optional[str]
+    details: str
+    spoiler: Optional[str]
+    voice_actors: List[VoiceActor]
+
+# people details
+class VoiceActingRole(BaseModel):
+    anime_name: str
+    anime_url: Optional[str]
+    anime_image: Optional[str]
+    character_name: str
+    character_url: Optional[str]
+    character_image: Optional[str]
+    role: str
+
+class AnimeStaffPosition(BaseModel):
+    anime: str
+    anime_url: Optional[str]
+    anime_image: Optional[str]
+    position: str
+
+class PersonDetails(BaseModel):
+    name: str
+    image_url: Optional[str]
+    given_name: Optional[str]
+    family_name: Optional[str]
+    alternate_names: List[str]
+    birthday: Optional[str]
+    about: Dict[str, Any]
+    voice_acting_roles: List[VoiceActingRole]
+    anime_staff_positions: List[AnimeStaffPosition]

@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 from app.models.hero_model import HeroData, HeroSearchResponse, HeroDetail, HeroSearchResult
 from typing import List
+from urllib.parse import unquote
 import logging
 
 class HeroScraper:
@@ -151,6 +152,7 @@ class HeroScraper:
             raise HTTPException(status_code=500, detail=f"Error parsing hero detail: {str(e)}")
         
     async def search_heroes(self, query: str) -> HeroSearchResponse:
+        query = unquote(query).replace(" ", '+')
         self.logger.info(f"Searching heroes with query: '{query}'")
         url = f"https://hero.fandom.com/wiki/Special:Search?query={query}&scope=internal&navigationSearch=true"
         async with httpx.AsyncClient() as client:

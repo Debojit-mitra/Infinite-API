@@ -7,6 +7,7 @@ from typing import Dict, List, Optional
 from app.models.anime.mal_model import MalDataType1, MalResponseType1
 from app.models.anime.mal_model import AnimeSeasonAndScheduleData, AnimeSeasonAndScheduleResponse
 from app.models.anime.mal_model import AnimeSearchResponse, AnimeSearchResult
+from app.models.anime.mal_model import PersonDetails, VoiceActingRole, AnimeStaffPosition
 import logging
 
 logger = logging.getLogger(__name__)
@@ -859,6 +860,248 @@ class AnimeDetailsScraper:
 
         logger.info(f"Successfully parsed details for anime ID: {anime_id}")
         return details
+    
+# character details
+    async def scrape_character_details(self, character_id: int) -> Dict:
+        url = f"{self.base_url}/character/{character_id}"
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+
+        if response.status_code != 200:
+            logger.error(f"Failed to fetch character details for ID {character_id}. Status code: {response.status_code}")
+            raise Exception(f"Failed to fetch character details for ID {character_id}")
+
+        return self._parse_character_details(response.text)
+
+
+    def _parse_character_details(self, html_content: str) -> Dict:
+        soup = BeautifulSoup(html_content, 'html.parser')
+        
+        # Extract character name
+        name_elem = soup.select_one('h2', class_='normal_header')
+        name = name_elem.text.strip() if name_elem else "Unknown"
+
+        # Extract image URL
+        image_elem = soup.select_one('img.portrait-225x350')
+        image_url = image_elem['data-src'] if image_elem and 'data-src' in image_elem.attrs else None
+
+        # Extract character details
+        details = ""
+        details_elem = soup.find('td', valign='top', style='padding-left: 5px;')
+
+        if details_elem:
+            # Find the h2 tag
+            h2_tag = details_elem.find('h2', class_='normal_header')
+            
+            # Find the spoiler div
+            spoiler_div = details_elem.find('div', class_='spoiler')
+            
+            # Find the voice actors section
+            voice_actors_section = details_elem.find(text=re.compile(r'Voice Actors', re.IGNORECASE))
+
+            if h2_tag:
+                # Traverse all the next siblings until the spoiler div or voice actors section (whichever comes first)
+                current = h2_tag
+                while current and current != spoiler_div and current != voice_actors_section:
+                    current = current.next_sibling
+                    
+                    # Check for strings and tag elements
+                    if isinstance(current, str):
+                        details += current.strip() + ' '
+                    elif current and current.name:
+                        details += current.get_text(separator=" ", strip=True) + ' '  # Extract text from tag elements
+
+        # Clean up details
+        details = re.sub(r'\s+', ' ', details).strip()
+        details = re.sub(r' \n ', '\n', details)
+        details = re.sub(r'\n+', '\n', details).strip()
+
+        # Remove lines that contain source citations or unwanted patterns like (Source: ...)
+        details = re.sub(r'\(Source:.*?\)', '', details)  # Remove anything inside parentheses with "Source:"
+        details = re.sub(r'\s+', ' ', details).strip()  # Clean up extra spaces
+
+        # Remove any voice actor information (e.g., lines starting with "Voice Actors" and followed by names)
+        details = re.sub(r'Voice Actors.*', '', details, flags=re.DOTALL)
+
+        # Remove any remaining navigation text or irrelevant lines
+        details = re.sub(r'^(Details|Clubs|Pictures|Top|Characters).*?\n', '', details, flags=re.MULTILINE).strip()
+
+        # Extract spoiler
+        spoiler_elem = soup.select_one('div.spoiler span.spoiler_content')
+        spoiler = spoiler_elem.text.strip() if spoiler_elem else ""
+
+        # Extract voice actors
+        voice_actors = []
+        voice_actor_tables = soup.select('div.normal_header:-soup-contains("Voice Actors") ~ table')
+        #print(voice_actor_tables)
+
+        for table in voice_actor_tables:
+            name_elem = table.select_one('td.borderClass:nth-of-type(2) a')
+            lang_elem = table.select_one('td.borderClass:nth-of-type(2) small')
+            img_elem = table.select_one('td.borderClass img')
+
+            if name_elem and lang_elem:
+                voice_actor = {
+                    "name": name_elem.text,
+                    "language": lang_elem.text.strip(),
+                    "url": urljoin(self.base_url, name_elem['href']) if name_elem.has_attr('href') else "",
+                    "image_url": img_elem['data-src'] if img_elem and img_elem.has_attr('data-src') else ""
+                }
+                voice_actors.append(voice_actor)
+
+        return {
+            "name": name,
+            "image_url": image_url,
+            "details": details,
+            "spoiler": spoiler,
+            "voice_actors": voice_actors
+        }
+    
+# People details
+    async def scrape_person_details(self, person_id: int):
+        logger.info(f"Scraping person details for ID: {person_id}")
+        url = f"{self.base_url}/people/{person_id}"
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+
+        if response.status_code != 200:
+            logger.error(f"Failed to fetch person details for ID {person_id}. Status code: {response.status_code}")
+            raise Exception(f"Failed to fetch person details for ID {person_id}")
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        return self._parse_person_details(soup, person_id)
+
+    def _parse_person_details(self, soup, person_id):
+        details = {}
+
+        # Name
+        name_elem = soup.select_one('h1.title-name strong')
+        details['name'] = name_elem.text.strip() if name_elem else ''
+
+        # Image URL
+        image_elem = soup.select_one('div[style*="text-align: center;"] img')
+        details['image_url'] = image_elem['data-src'] if image_elem and 'data-src' in image_elem.attrs else None
+
+        # Helper function to extract information
+        def extract_info(label):
+            elem = soup.select_one(f'.spaceit_pad:-soup-contains("{label}:")')
+            if elem:
+                return elem.contents[-1].strip()
+            return None
+
+        # Extract various details
+        details['given_name'] = extract_info("Given name")
+
+        family_name_elem = soup.select_one('span.dark_text:-soup-contains("Family name:")')
+        details['family_name'] = family_name_elem.next_sibling.strip() if family_name_elem else None
+
+        details['alternate_names'] = extract_info("Alternate names")
+        if details['alternate_names']:
+            details['alternate_names'] = [name.strip() for name in details['alternate_names'].split(',')]
+        else:
+            details['alternate_names'] = []
+        details['birthday'] = extract_info("Birthday")
+
+        # About information
+        about_elem = soup.select_one('.people-informantion-more')
+        if about_elem:
+            details['about'] = self._parse_about_info(about_elem.text)
+        else:
+            details['about'] = {}
+
+        # Voice Acting Roles
+        details['voice_acting_roles'] = self._parse_voice_acting_roles(soup)
+
+        # Anime Staff Positions
+        details['anime_staff_positions'] = self._parse_anime_staff_positions(soup)
+
+        return PersonDetails(**details)
+
+    def _parse_voice_acting_roles(self, soup):
+        roles = []
+        role_table = soup.select_one('table.js-table-people-character')
+        if role_table:
+            for row in role_table.select('tr'):
+                anime_elem = row.select_one('td:nth-child(2) a.js-people-title')
+                anime_image = row.select_one('td:nth-child(1) img')
+                character_elem = row.select_one('td:nth-child(3) a')
+                character_image = row.select_one('td:nth-child(4) img')
+                role_elem = row.select_one('td:nth-child(3) div:nth-child(2)')
+                
+                if anime_elem and character_elem:
+                    role = VoiceActingRole(
+                        anime_name=anime_elem.text.strip(),
+                        anime_url=self.base_url + anime_elem['href'] if anime_elem.has_attr('href') else None,
+                        anime_image=anime_image['data-src'] if anime_image and anime_image.has_attr('data-src') else None,
+                        character_name=character_elem.text.strip(),
+                        character_url=self.base_url + character_elem['href'] if character_elem.has_attr('href') else None,
+                        character_image=character_image['data-src'] if character_image and character_image.has_attr('data-src') else None,
+                        role=role_elem.text.strip() if role_elem else 'Unknown'
+                    )
+                    roles.append(role)
+        return roles
+
+    def _parse_anime_staff_positions(self, soup):
+        positions = []
+        staff_table = soup.select_one('table.js-table-people-staff')
+        if staff_table:
+            for row in staff_table.select('tr'):
+                anime_elem = row.select_one('td:nth-child(2) a.js-people-title')
+                position_elem = row.select_one('td:nth-child(2) small')
+                anime_image = row.select_one('td:nth-child(1) img')
+                
+                if anime_elem and position_elem:
+                    position = AnimeStaffPosition(
+                        anime=anime_elem.text.strip(),
+                        anime_url=self.base_url + anime_elem['href'] if anime_elem.has_attr('href') else None,
+                        anime_image=anime_image['data-src'] if anime_image and anime_image.has_attr('data-src') else None,
+                        position=position_elem.text.strip()
+                    )
+                    positions.append(position)
+        return positions
+    
+    def _parse_about_info(self, text):
+        about_info = {
+            'personal_info': {},
+            'background': [],
+            'awards': [],
+            'profile': [],
+            'social_media': {}
+        }
+        
+        lines = text.strip().split('\n')
+        current_section = 'personal_info'
+        
+        for line in lines:
+            line = line.strip()
+            if not line or '(Source:' in line:
+                continue
+            
+            if line.startswith('Awards:'):
+                current_section = 'awards'
+            elif line.startswith('Profile:'):
+                current_section = 'profile'
+            elif line.startswith('Twitter:'):
+                current_section = 'social_media'
+            elif ':' in line and current_section == 'personal_info':
+                key, value = line.split(':', 1)
+                about_info['personal_info'][key.strip()] = value.strip()
+            elif line.startswith('- ') and current_section == 'awards':
+                about_info['awards'].append(line[2:])
+            elif current_section == 'profile':
+                about_info['profile'].extend(line.split(', '))
+            elif current_section == 'social_media':
+                if line.startswith('@'):
+                    key, value = line.split(' ', 1)
+                    about_info['social_media'][key] = value.strip('()')
+                elif ':' in line:
+                    key, value = line.split(':', 1)
+                    about_info['social_media'][key.strip()] = value.strip()
+            else:
+                about_info['background'].append(line)
+        
+        return about_info
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')

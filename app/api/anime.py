@@ -1,6 +1,6 @@
 import logging
 from fastapi import APIRouter, HTTPException, Depends, Query
-from app.models.anime.mal_model import (MalResponseType1, AnimeSeasonAndScheduleResponse, AnimeSearchResponse, AnimeDetails)
+from app.models.anime.mal_model import (MalResponseType1, AnimeSeasonAndScheduleResponse, AnimeSearchResponse, AnimeDetails, CharacterDetails, PersonDetails)
 from app.dependencies import get_anime_scraper, get_anime_season_and_schedule_scraper, get_anime_search_scraper, get_anime_details_scraper
 from typing import Optional, List
 
@@ -228,4 +228,34 @@ async def get_anime_details(
         return result
     except Exception as e:
         logger.error(f"Error fetching anime details for ID {id}: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+    
+# Anime character details
+@router.get("/mal/character", response_model=CharacterDetails)
+async def get_character_details(
+    id: int = Query(..., description="MyAnimeList ID of the character"),
+    scraper = Depends(get_anime_details_scraper)
+):
+    logger.info(f"Fetching character details for ID: {id}")
+    try:
+        result = await scraper.scrape_character_details(id)
+        logger.info(f"Successfully fetched character details for ID: {id}")
+        return result
+    except Exception as e:
+        logger.error(f"Error fetching character details for ID {id}: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+    
+# People details
+@router.get("/mal/person", response_model=PersonDetails)
+async def get_person_details(
+    id: int = Query(..., description="MyAnimeList ID of the person"),
+    scraper = Depends(get_anime_details_scraper)
+):
+    logger.info(f"Fetching person details for ID: {id}")
+    try:
+        result = await scraper.scrape_person_details(id)
+        logger.info(f"Successfully fetched person details for ID: {id}")
+        return result
+    except Exception as e:
+        logger.error(f"Error fetching person details for ID {id}: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))

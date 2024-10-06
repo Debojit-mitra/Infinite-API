@@ -22,7 +22,7 @@ Infinite API is a versatile FastAPI-based project that brings together multiple 
 
 For detailed API documentation, usage examples, and more, please visit our comprehensive documentation site:
 
-[📖 Infinite API Documentation](https://debojit-mitra.github.io/Infinite-API/)
+📖 [Infinite API Documentation](https://debojit-mitra.github.io/Infinite-API/)
 
 ## 🛠️ Quick Start
 
@@ -34,6 +34,16 @@ $ cd infinite-api
 $ pip install -r requirements.txt
 $ uvicorn app.main:app --reload
 ```
+
+## 🚀 Deploy
+
+### Vercel
+
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Debojit-mitra/infinite-api)
+
+### Koyeb
+
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=https://github.com/Debojit-mitra/infinite-api&branch=main&name=infinite-api)
 
 ## 🤝 Contributing
 

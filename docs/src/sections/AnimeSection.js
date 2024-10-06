@@ -327,6 +327,44 @@ const AnimeSection = () => (
         },
       ]}
     />
+
+    <Endpoint
+      method="GET"
+      path="/anime/mal/character"
+      description="Get anime character details from MyAnimeList."
+      params={[
+        {
+          name: "id",
+          required: true,
+          description: "MyAnimeList ID of the character",
+        },
+      ]}
+      examples={[
+        {
+          title: "Get details for character with ID 417",
+          code: "/anime/mal/character?id=417",
+        },
+      ]}
+    />
+
+    <Endpoint
+      method="GET"
+      path="/anime/mal/person"
+      description="Get person details from MyAnimeList."
+      params={[
+        {
+          name: "id",
+          required: true,
+          description: "MyAnimeList ID of the person",
+        },
+      ]}
+      examples={[
+        {
+          title: "Get details for person with ID 1",
+          code: "/anime/mal/person?id=1",
+        },
+      ]}
+    />
   </Section>
 );
 

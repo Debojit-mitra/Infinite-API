@@ -46,15 +46,15 @@ async def get_hero_detail(
 
 @router.get("/search", response_model=HeroSearchResponse, responses={404: {"model": ErrorResponse}, 500: {"model": ErrorResponse}})
 async def search_heroes(
-    query: str = Query(..., description="The search query"),
+    q: str = Query(..., description="The search query"),
     scraper = Depends(get_heroes_scraper)
 ):
     """Search for heroes based on a query."""
-    logger.info(f"Searching heroes with query: '{query}'")
+    logger.info(f"Searching heroes with query: '{q}'")
     try:
-        search_response = await scraper.search_heroes(query)
-        logger.info(f"Successfully searched heroes with query: '{query}'")
+        search_response = await scraper.search_heroes(q)
+        logger.info(f"Successfully searched heroes with query: '{q}'")
         return search_response
     except Exception as e:
-        logger.error(f"Error searching heroes with query '{query}': {str(e)}", exc_info=True)
+        logger.error(f"Error searching heroes with query '{q}': {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
